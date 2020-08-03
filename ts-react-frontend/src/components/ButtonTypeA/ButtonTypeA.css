@@ -1,0 +1,14 @@
+.button-type-a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 75px;
+    height: calc(100% - 20px);
+    padding: 10px;
+
+    border: solid black 1px;
+    border-radius: 10px;
+    background-color: var(--chatbot-main-color);
+    color: whitesmoke;
+}
