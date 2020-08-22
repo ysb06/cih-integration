@@ -1,0 +1,17 @@
+{
+  "name": "chatbot-api-server",
+  "version": "1.0.0",
+  "description": "Server for connecting frontend to dialogflow server",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node ./build/"
+  },
+  "author": "ysb",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.17.7",
+    "@types/node": "^14.6.0",
+    "express": "^4.17.1",
+    "typescript": "^4.0.2"
+  }
+}

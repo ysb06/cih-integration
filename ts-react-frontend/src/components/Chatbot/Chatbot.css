@@ -8,77 +8,85 @@
     display: flex;
     flex-direction: column;
 
-    background-color: thistle;
-
     width: 100%;
     height: 100%;
+
+    background-color: whitesmoke;
 }
 
-    .chatbot-app .chatbot-title {
-        display: flex;
-        align-items: center;
+.chatbot-app .chatbot-header {
+    display: flex;
+    align-items: center;
 
-        height: 10%;
-        min-height: 80px;
+    height: 10%;
+    min-height: 80px;
 
-        background-color: var(--chatbot-main-color);
+    background-color: var(--chatbot-main-color);
 
-        color: whitesmoke;
-    }
+    color: whitesmoke;
+}
 
-        .chatbot-app .chatbot-name {
-            margin: 0 5%;
-            font-size: 1.5rem;
-        }
+.chatbot-app .name {
+    margin: 0 50px;
+    font-size: 1.75rem;
+}
 
-    .chatbot-app .chatbot-dialog {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex-grow: 1;
-    }
+/** 채팅 다이얼로그 **/
+.chatbot-app .chatbot-dialog {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-grow: 1;
+    overflow-y: auto;
+}
 
-        .chatbot-app .chatbot-dialog-content {
-            border: solid black 2.5px;
-            border-radius: 10px;
+.chatbot-app .chatbot-dialog .dialog-list {
+    height: fit-content;
+}
 
-            box-sizing: border-box;
-            width: calc(100% - 20px);
-            height: 100%;
-            margin: 10px 10px 0 10px;
-            padding: 10px;
-        }
+.chatbot-app .dialog-element {
+    width: 100%;
+    height: calc(1.56rem + 36px);
+    margin: 25px 0;
+    box-sizing: border-box;
 
-        .chatbot-app .chatbot-dialog-element-0 {
-            float: right;
-            border-radius: 5px;
-            font-size: 1rem;
-            padding: 5px 10px;
+    font-size: 1.2rem;
+}
 
-            background-color: lightyellow;
-        }
+.chatbot-app .dialog-element .user-0 {
+    width: fit-content;
+    height: 1.56rem;
+    padding: 18px;
+    margin: 0 2%;
+    background-color: lightblue;
+    float: right;
+}
 
+.chatbot-app .dialog-element .user-1 {
+    width: fit-content;
+    height: 1.56rem;
+    padding: 18px;
+    margin: 0 2%;
+    background-color: lightcoral;
+    float: left;
+}
 
-    .chatbot-app .chatbot-user-input {
-        display: flex;
-        justify-content: space-around;
+/** 채팅 입력창 **/
+.chatbot-app .chatbot-input {
+    border-top: 1px solid lightgray;
+    display: flex;
+}
 
-        box-sizing: border-box;
+.chatbot-app .chatbot-input input {
+    flex-grow: 1;
+    border-style: none;
+    background-color: whitesmoke;
+    margin: 10px 10px 10px 20px;
+}
 
-        width: 100%;
-        padding: 10px;
-    }
+.chatbot-app .chatbot-input input:focus {
+    outline: none;
+}
 
-    .chatbot-app .chatbot-user-input input[type="text"] {
-        flex-grow: 1;
-        margin-right: 10px;
-        border-radius: 10px;
-        outline: none;
-        padding: 0 15px;
-    }
-
-    .chatbot-app .chatbot-user-input .button-send {
-        margin-left: 10px;
-        cursor: pointer;
-    }
-
+.chatbot-app .button-container {
+    padding: 10px;
+}

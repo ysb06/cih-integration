@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './ButtonTypeA.css'
+import './SendButton.css'
 
 interface IButtonTypeAProps {
     text: string
@@ -8,7 +8,7 @@ interface IButtonTypeAProps {
 class ButtonTypeA extends Component<IButtonTypeAProps> {
     render() {
         return (
-            <div className="button-type-a">
+            <div className="send-button">
                 <span>{this.props.text}</span>
             </div>
         );
