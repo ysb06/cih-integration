@@ -25,8 +25,8 @@ interface IChatbotResponse { //Chatbot 클라이언트 송신 인터페이스
 
 router.post('/', async function (req: express.Request, res: express.Response) {
     const reqBody: IChatbotRequest = req.body;
-    console.log('Req: ');
-    console.log(reqBody);
+    //console.log('Req: ');
+    //console.log(reqBody);
     if(!reqBody.query) {
         console.error('Empty Query');
         return;
@@ -34,14 +34,20 @@ router.post('/', async function (req: express.Request, res: express.Response) {
 
     if(reqBody.session) {   //session은 무조건 클라이언트에서 생성
         const result: IChatbotResponse = await detectIntent(reqBody.session, reqBody.query, [], reqBody.languageCode? reqBody.languageCode : 'ko');
-        console.log('Res: ');
-        console.log(result);
+        //console.log('Res: ');
+        //console.log(result);
         res.status(200).json(result);
     } else {
         console.log('Res: Error');
         res.status(400).end();
     }
 });
+
+// 대화 로그는 Google Stack Driver 연동하면 할 수 있는 것으로 보임
+// 그 외의 대화 로그 얻는 것은 불가능해 보임.
+// @types/dialogflow가 Deprecated 된 것은 최신 메서드들을 지원하지 않아서 임.
+// Type에 대해서는 작업 중이며 코로나 때문에 지연되었다는 이야기가 있음.
+// 어쨌든 후에 Stack Driver 연동을 하더라도 세션은 따로 구현해야 할 듯.
 
 async function detectIntent(
     sessionId: string,
