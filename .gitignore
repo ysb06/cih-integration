@@ -118,6 +118,4 @@ dist
 nodejs/
 
 # Build Folder
-chatbot-api-server/[Bb]uild
-user-frontend/[Bb]uild
-administrator-frontend/[Bb]uild
+[Bb]uild/
