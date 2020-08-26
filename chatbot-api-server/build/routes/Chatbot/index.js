@@ -9,8 +9,12 @@ router.post('/', async function (req, res) {
     const reqBody = req.body;
     console.log('Req: ');
     console.log(reqBody);
+    if (!reqBody.query) {
+        console.error('Empty Query');
+        return;
+    }
     if (reqBody.session) { //session은 무조건 클라이언트에서 생성
-        const result = await detectIntent(reqBody.session, reqBody.query, [], reqBody.languageCode ? reqBody.languageCode : 'ko-KR');
+        const result = await detectIntent(reqBody.session, reqBody.query, [], reqBody.languageCode ? reqBody.languageCode : 'ko');
         console.log('Res: ');
         console.log(result);
         res.status(200).json(result);
@@ -38,6 +42,7 @@ async function detectIntent(sessionId, query, contexts, languageCode) {
             contexts: contexts,
         };
     }
+    console.log('Req to Dialogflow: ');
     console.log(request);
     const responses = await sessionClient.detectIntent(request);
     /*

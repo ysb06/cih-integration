@@ -1,9 +1,9 @@
 .chatbot-app {
-    --chatbot-main-color: #170080;
-    --chatbot-sub-color-1: #6D4DFF;
-    --chatbot-sub-color-2: #372680;
-    --chatbot-sub-color-3: #2500CC;
-    --chatbot-sub-color-4: #2F00FF;
+    --main-color-type-1: #6B53E6;
+    --main-color-type-2: #615E73;
+    --main-color-type-3: #B6C4D9;
+    --main-color-type-4: #DECFBA;
+    --main-color-type-5: #A66435;
 
     display: flex;
     flex-direction: column;
@@ -20,7 +20,7 @@
 
     min-height: 100px;
 
-    background-color: var(--chatbot-main-color);
+    background-color: var(--main-color-type-1);
 
     color: whitesmoke;
 }
@@ -36,6 +36,7 @@
     flex-direction: column-reverse;
     flex-grow: 1;
     overflow-y: auto;
+    padding: 10px;
 }
 
 .chatbot-app .chatbot-dialog .dialog-list {
@@ -53,26 +54,26 @@
 
 .chatbot-app .dialog-element .user-0 {
     width: fit-content;
-    height: 1.56rem;
     padding: 18px;
-    margin: 0 2%;
+    margin: 10px 2%;
     
     border-radius: 9px;
-    background-color: lightblue;
+    background-color: var(--main-color-type-3);
 
     float: right;
+    text-align: left;
 }
 
 .chatbot-app .dialog-element .user-1 {
     width: fit-content;
-    height: 1.56rem;
     padding: 18px;
-    margin: 0 2%;
+    margin: 10px 2%;
 
     border-radius: 9px;
-    background-color: lightcoral;
+    background-color: var(--main-color-type-4);
     
     float: left;
+    text-align: left;
 }
 
 /** 채팅 입력창 **/

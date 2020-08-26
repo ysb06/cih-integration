@@ -27,9 +27,13 @@ router.post('/', async function (req: express.Request, res: express.Response) {
     const reqBody: IChatbotRequest = req.body;
     console.log('Req: ');
     console.log(reqBody);
+    if(!reqBody.query) {
+        console.error('Empty Query');
+        return;
+    }
 
     if(reqBody.session) {   //session은 무조건 클라이언트에서 생성
-        const result: IChatbotResponse = await detectIntent(reqBody.session, reqBody.query, [], reqBody.languageCode? reqBody.languageCode : 'ko-KR');
+        const result: IChatbotResponse = await detectIntent(reqBody.session, reqBody.query, [], reqBody.languageCode? reqBody.languageCode : 'ko');
         console.log('Res: ');
         console.log(result);
         res.status(200).json(result);
@@ -45,7 +49,6 @@ async function detectIntent(
     contexts: Context[],
     languageCode: string
 ): Promise<IChatbotResponse> {
-
     // The path to identify the agent that owns the created intent.
     const sessionPath = sessionClient.sessionPath(
         PROJECT_ID,
@@ -69,6 +72,7 @@ async function detectIntent(
         };
     }
 
+    console.log('Req to Dialogflow: ');
     console.log(request);
     const responses: DetectIntentResponse[] = await sessionClient.detectIntent(request);
     /*

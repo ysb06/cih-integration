@@ -56,6 +56,10 @@ class Chatbot extends Component<IChatbotProps, IChatbotState> {
 
     async onSendMessage() {
         let query = this.state.userInput;   //사용자가 입력을 마치고 전송 요청
+        if(!query) {
+            console.log('Empty Query');
+            return;
+        }
 
         this.setState({
             userInput: '',      //입력 창 비움
