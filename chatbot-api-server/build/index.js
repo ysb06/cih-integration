@@ -5,8 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_errors_1 = __importDefault(require("http-errors"));
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const routes_1 = __importDefault(require("./routes"));
+const body_parser_1 = __importDefault(require("body-parser"));
 const app = express_1.default();
+//cors 설정
+app.use(cors_1.default());
+app.use(body_parser_1.default.json());
 //Router 정의
 routes_1.default(app);
 //Error 처리

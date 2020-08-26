@@ -1,8 +1,14 @@
 import createError from 'http-errors';
 import express from 'express';
+import cors from 'cors';
 import setRouters from './routes';
+import bodyParser from 'body-parser';
 
 const app: express.Express = express();
+
+//cors 설정
+app.use(cors());
+app.use(bodyParser.json());
 
 //Router 정의
 setRouters(app);

@@ -2,13 +2,32 @@ import React, { Component } from 'react';
 import Button from './SendButton';
 import './Chatbot.css';
 
+const SERVER_CHATBOT_URL = '//localhost:3001/chat';
+const DEFAULT_LANGUAGE_CODE = 'ko-KR';
+
+
+interface IChatbotRequest { //Chatbot 서버 송신 인터페이스
+    session?: string,
+    languageCode?: string,
+    query: string
+}
+
+interface IChatbotResponse { //Chatbot 서버 수신 인터페이스
+    languageCode?: string,
+    responseText: string
+}
+
 interface IChatbotProps {
     name: string
 }
 
 interface IChatbotState {
-    message: string,
-    chatLog: ChatElement[]
+    userInput: string,
+    chatLog: ChatElement[],
+    context: {
+        session?: string,
+        languageCode: string
+    }
 }
 
 class Chatbot extends Component<IChatbotProps, IChatbotState> {
@@ -19,16 +38,61 @@ class Chatbot extends Component<IChatbotProps, IChatbotState> {
         this.onSubmit = this.onSubmit.bind(this);
     }
     state: IChatbotState = {
-        message: '',
-        chatLog: [new ChatElement('Test 1 Long Line', 0), new ChatElement('Test 2', 1)]
+        userInput: '',
+        chatLog: [],
+        context: {
+            languageCode: DEFAULT_LANGUAGE_CODE
+        }
     }
 
-    onSendMessage() {
-        console.log(this.state.message);
+    componentDidMount() {
         this.setState({
-            message: '',
-            chatLog: [...this.state.chatLog, new ChatElement(this.state.message, 0)]
+            context: {
+                session: this.createSession(),
+                languageCode: DEFAULT_LANGUAGE_CODE
+            }
+        })
+    }
+
+    async onSendMessage() {
+        let query = this.state.userInput;   //사용자가 입력을 마치고 전송 요청
+
+        this.setState({
+            userInput: '',      //입력 창 비움
+            chatLog: [...this.state.chatLog, new ChatElement(query, 0)] //입력을 채팅 창에 업데이트
         });
+
+        let reqBody: IChatbotRequest = {
+            session: this.state.context.session,
+            languageCode: this.state.context.languageCode,
+            query: query
+        }
+        try {
+            let res: Response = await fetch(SERVER_CHATBOT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reqBody)
+            });
+
+            let result: IChatbotResponse = await res.json();
+            this.onMessageReceived(result);
+        } catch (e) {
+            console.log('Fetch Failed --> ');
+            console.error(e);
+        }
+    }
+
+    onMessageReceived(result: IChatbotResponse) {
+        console.log(result);
+        //*
+        this.setState({
+            chatLog: [...this.state.chatLog, new ChatElement(result.responseText, 1)],
+            context: {
+                session: this.state.context.session,
+                languageCode: result.languageCode ? result.languageCode : DEFAULT_LANGUAGE_CODE
+            }
+        });
+        // */
     }
 
     onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -37,7 +101,7 @@ class Chatbot extends Component<IChatbotProps, IChatbotState> {
     }
 
     onMessageChanged(event: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({ message: event.target.value });
+        this.setState({ userInput: event.target.value });
     }
 
     render() {
@@ -53,11 +117,21 @@ class Chatbot extends Component<IChatbotProps, IChatbotState> {
 
                 </div>
                 <form className="chatbot-input" onSubmit={this.onSubmit}>
-                    <input type="text" placeholder="대화를 입력해 주세요..." onChange={this.onMessageChanged} value={this.state.message} />
+                    <input type="text" placeholder="대화를 입력해 주세요..." onChange={this.onMessageChanged} value={this.state.userInput} />
                     <div className="button-container" onClick={this.onSendMessage}><Button text="전송" /></div>
                 </form>
             </div>
         );
+    }
+
+    createSession(): string {
+        let dateNow: Date = new Date();
+        let code: Number = Math.floor(Math.random() * 4096);
+        let result = 
+            dateNow.getFullYear().toString() + dateNow.getMonth().toString() + dateNow.getDate().toString() + '-' + 
+            dateNow.getHours().toString() + dateNow.getMinutes().toString() + dateNow.getSeconds().toString() + '-' + 
+            code.toString(16);
+        return result;
     }
 }
 
