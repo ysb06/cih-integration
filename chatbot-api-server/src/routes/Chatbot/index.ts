@@ -1,9 +1,11 @@
 import express, { Router } from 'express';
 import { SessionsClient, QueryParams, QueryInput, Context, DetectIntentResponse } from 'dialogflow';
+import SessionManager, { ChatRole } from './SessionManager';
 
+const PROJECT_ID = 'csproject-1b085';
 const router: Router = Router();
 const sessionClient: SessionsClient = new SessionsClient();
-const PROJECT_ID = 'csproject-1b085';
+const manager: SessionManager = new SessionManager();
 
 //Dialogflow 요청 prototype
 interface IDialogflowRequest {
@@ -27,19 +29,35 @@ router.post('/', async function (req: express.Request, res: express.Response) {
     const reqBody: IChatbotRequest = req.body;
     //console.log('Req: ');
     //console.log(reqBody);
-    if(!reqBody.query) {
+    if (!reqBody.query) {
         console.error('Empty Query');
         return;
     }
 
-    if(reqBody.session) {   //session은 무조건 클라이언트에서 생성
-        const result: IChatbotResponse = await detectIntent(reqBody.session, reqBody.query, [], reqBody.languageCode? reqBody.languageCode : 'ko');
+    // 채팅 로그에 유저 질의 추가
+    manager.addChat(
+        reqBody.session ? reqBody.session : 'Unknown',
+        { role: ChatRole.User, text: reqBody.query }
+    );
+
+    if (reqBody.session) {   //session은 무조건 클라이언트에서 생성
+        const result: IChatbotResponse = await detectIntent(reqBody.session, reqBody.query, [], reqBody.languageCode ? reqBody.languageCode : 'ko');
         //console.log('Res: ');
         //console.log(result);
+
+        // 채팅 로그에 봇 답변 추가
+        manager.addChat(
+            reqBody.session ? reqBody.session : 'Unknown',
+            { role: ChatRole.Chatbot, text: result.responseText }
+        );
         res.status(200).json(result);
     } else {
         console.log('Res: Error');
         res.status(400).end();
+    }
+    
+    if(reqBody.session) {
+        manager.getSession(reqBody.session);
     }
 });
 

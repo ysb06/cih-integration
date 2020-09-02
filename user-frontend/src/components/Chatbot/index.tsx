@@ -112,7 +112,7 @@ class Chatbot extends Component<IChatbotProps, IChatbotState> {
         return (
             <div className="chatbot-app">
                 <div className="chatbot-header">
-                    <span className="name">{this.props.name}</span>
+                    <span className="name">{this.props.name} ({this.state.context.session})</span>
                 </div>
                 <div className="chatbot-dialog">
                     <div className="dialog-list">
