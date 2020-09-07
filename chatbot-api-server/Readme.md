@@ -24,4 +24,4 @@ https://cloud.google.com/dialogflow/docs/quick/api
             * Linux: export GOOGLE_APPLICATION_CREDENTIALS="[PATH]"
             * Windows(PowerShell): $env:GOOGLE_APPLICATION_CREDENTIALS="[PATH]"
                 + 주의: 환경변수가 세팅이 안 되는 경우 고급 시스템 설정-환경변수에서 시도해 볼 것
-    4. 작성중...
+    4. npm install로 패키지 설치

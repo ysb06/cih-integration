@@ -1,116 +1,71 @@
-import express, { Router } from 'express';
-import { SessionsClient, QueryParams, QueryInput, Context, DetectIntentResponse } from 'dialogflow';
+import express, { Router, NextFunction } from 'express';
 import SessionManager, { ChatRole } from './SessionManager';
+import createHttpError from 'http-errors';
 
-const PROJECT_ID = 'csproject-1b085';
+import decrypt from '../../common/decryptor';
+import detectIntent from './IntentDetector';
+
 const router: Router = Router();
-const sessionClient: SessionsClient = new SessionsClient();
+
 const manager: SessionManager = new SessionManager();
 
-//Dialogflow 요청 prototype
-interface IDialogflowRequest {
+interface IChatRequest { //Chatbot 클라이언트 수신 인터페이스
     session: string,
-    queryInput: QueryInput,
-    queryParams?: QueryParams
-}
-
-interface IChatbotRequest { //Chatbot 클라이언트 수신 인터페이스
-    session?: string,
     languageCode?: string,
     query: string
 }
 
-interface IChatbotResponse { //Chatbot 클라이언트 송신 인터페이스
+interface IChatResponse { //Chatbot 클라이언트 송신 인터페이스
     languageCode?: string,
     responseText: string
 }
 
-router.post('/', async function (req: express.Request, res: express.Response) {
-    const reqBody: IChatbotRequest = req.body;
-    //console.log('Req: ');
-    //console.log(reqBody);
+interface ISessionRequest {
+    id?: string,
+    secret: string
+}
+
+router.post('/', async function (req: express.Request, res: express.Response, next: NextFunction) {
+    const reqBody: IChatRequest = req.body;
+    //#region 쿼리 유효성 체크
     if (!reqBody.query) {
-        console.error('Empty Query');
+        next(new createHttpError[400]('No Query body for detecting intent'));
+        return;
+    }
+    if (!reqBody.session) {
+        next(new createHttpError[400]('No Session ID'));
+        return;
+    }
+    //#endregion
+
+    manager.addChat(    // 채팅 로그에 유저 질의 추가
+        reqBody.session, { role: ChatRole.User, text: reqBody.query }
+    );
+    const result: IChatResponse = await detectIntent(
+        reqBody.session, reqBody.query, [], reqBody.languageCode ? reqBody.languageCode : 'ko'
+    );  // 주의: Dialogflow에서 받은 내용을 가공 없이 그대로 내보내고 있음
+    manager.addChat(    // 채팅 로그에 봇 답변 추가
+        reqBody.session, { role: ChatRole.Chatbot, text: result.responseText }
+    );
+    res.status(200).json(result);
+});
+
+router.get('/session/', async function (req: express.Request, res: express.Response, next: NextFunction) {
+    const reqBody: ISessionRequest = {
+        secret: req.query.secret as string
+    };
+    if (!decrypt(reqBody.secret)) {
+        next(new createHttpError[403]('Secret Not Matched'));
         return;
     }
 
-    // 채팅 로그에 유저 질의 추가
-    manager.addChat(
-        reqBody.session ? reqBody.session : 'Unknown',
-        { role: ChatRole.User, text: reqBody.query }
-    );
-
-    if (reqBody.session) {   //session은 무조건 클라이언트에서 생성
-        const result: IChatbotResponse = await detectIntent(reqBody.session, reqBody.query, [], reqBody.languageCode ? reqBody.languageCode : 'ko');
-        //console.log('Res: ');
-        //console.log(result);
-
-        // 채팅 로그에 봇 답변 추가
-        manager.addChat(
-            reqBody.session ? reqBody.session : 'Unknown',
-            { role: ChatRole.Chatbot, text: result.responseText }
-        );
-        res.status(200).json(result);
-    } else {
-        console.log('Res: Error');
-        res.status(400).end();
-    }
-    
-    if(reqBody.session) {
-        manager.getSession(reqBody.session);
-    }
+    //세션
+    res.status(200).json(manager.getSessions());
 });
 
+export default router;
+
 // 대화 로그는 Google Stack Driver 연동하면 할 수 있는 것으로 보임
-// 그 외의 대화 로그 얻는 것은 불가능해 보임.
+// 그러나 힘들게 Google Stack Driver 연동할 필요 없이 현재처럼 서버에서 로그를 직접 관리하는 것이 더 좋은 것으로 보임
 // @types/dialogflow가 Deprecated 된 것은 최신 메서드들을 지원하지 않아서 임.
 // Type에 대해서는 작업 중이며 코로나 때문에 지연되었다는 이야기가 있음.
-// 어쨌든 후에 Stack Driver 연동을 하더라도 세션은 따로 구현해야 할 듯.
-
-async function detectIntent(
-    sessionId: string,
-    query: string,
-    contexts: Context[],
-    languageCode: string
-): Promise<IChatbotResponse> {
-    // The path to identify the agent that owns the created intent.
-    const sessionPath = sessionClient.sessionPath(
-        PROJECT_ID,
-        sessionId
-    );
-
-    // The text query request.
-    const request: IDialogflowRequest = {
-        session: sessionPath,
-        queryInput: {
-            text: {
-                text: query,
-                languageCode: languageCode,
-            },
-        },
-    };
-
-    if (contexts && contexts.length > 0) {
-        request.queryParams = {
-            contexts: contexts,
-        };
-    }
-
-    console.log('Req to Dialogflow: ');
-    console.log(request);
-    const responses: DetectIntentResponse[] = await sessionClient.detectIntent(request);
-    /*
-    console.log(responses.length);
-    if(responses.length > 0) {
-        for(let i = 0; i < responses.length; i++) {
-            console.log(responses[i]);
-        }
-    }
-    // */
-    return {
-        responseText: responses[0].queryResult.fulfillmentText,
-        languageCode: responses[0].queryResult.languageCode
-    };
-}
-
-export default router;

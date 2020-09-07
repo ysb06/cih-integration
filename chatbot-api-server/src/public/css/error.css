@@ -1,0 +1,18 @@
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    word-break: keep-all;
+    margin: 0;
+}
+
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.content {
+    text-align: center;
+}
