@@ -4,7 +4,8 @@
   "description": "Server for connecting frontend to dialogflow server",
   "main": "index.js",
   "scripts": {
-    "start": "npx tsc; cp -recurse -force ./src/public ./build/; node ./build/"
+    "start": "node ./build/",
+    "build": "npx tsc; cp -recurse -force ./src/public ./build/"
   },
   "author": "ysb",
   "license": "MIT",
