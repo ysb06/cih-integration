@@ -164,7 +164,7 @@ class Chatbot extends Component<IChatbotProps, IChatbotState> {
         let dateNow: Date = new Date();
         let code: Number = Math.floor(Math.random() * 4096);
         let result = 
-            dateNow.getFullYear().toString() + dateNow.getMonth().toString() + dateNow.getDate().toString() + '-' + 
+            dateNow.getFullYear().toString() + (dateNow.getMonth() + 1).toString() + dateNow.getDate().toString() + '-' + 
             dateNow.getHours().toString() + dateNow.getMinutes().toString() + dateNow.getSeconds().toString() + '-' + 
             code.toString(16);
         return result;
