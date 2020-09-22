@@ -76,3 +76,24 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 960px) {
+  .app-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .site-introduction {
+    width: 80%;
+    padding: 3vh 10%;
+  }
+
+  .main-content {
+    width: 100%;
+    height: unset;
+  }
+
+  .chatbot-container {
+    height: 100vh;
+  }
+}

@@ -27,7 +27,8 @@ interface IChatbotState {
     context: {
         session?: string,
         languageCode: string
-    }
+    },
+    isSuggestMode: Boolean
 }
 
 class Chatbot extends Component<IChatbotProps, IChatbotState> {
@@ -42,7 +43,8 @@ class Chatbot extends Component<IChatbotProps, IChatbotState> {
         chatLog: [],
         context: {
             languageCode: DEFAULT_LANGUAGE_CODE
-        }
+        },
+        isSuggestMode: false
     }
 
     componentDidMount() {
@@ -66,10 +68,40 @@ class Chatbot extends Component<IChatbotProps, IChatbotState> {
             chatLog: [...this.state.chatLog, new ChatElement(query, 0)] //입력을 채팅 창에 업데이트
         });
 
+        if(query === '기능 제안') {
+            setTimeout(() => {
+                this.setState({
+                    chatLog: [...this.state.chatLog, new ChatElement('네, 제안 사항을 입력해 주세요.', 1)],
+                    isSuggestMode: true
+                });
+            }, 250);
+            return;
+        }
+
         let reqBody: IChatbotRequest = {
             session: this.state.context.session,
             languageCode: this.state.context.languageCode,
             query: query
+        }
+
+        if(this.state.isSuggestMode) {
+            let res: Response = await fetch(SERVER_CHATBOT_URL + '/suggestion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reqBody)
+            });
+            if(res.ok) {
+                this.setState({
+                    chatLog: [...this.state.chatLog, new ChatElement('네, 제안 사항을 접수했습니다.', 1)],
+                    isSuggestMode: false
+                });
+            } else {
+                this.setState({
+                    chatLog: [...this.state.chatLog, new ChatElement('죄송해요. 서버에서 제안 사항을 처리하지 못했습니다.', 1)],
+                    isSuggestMode: false
+                });
+            }
+            return;
         }
         try {
             let res: Response = await fetch(SERVER_CHATBOT_URL, {

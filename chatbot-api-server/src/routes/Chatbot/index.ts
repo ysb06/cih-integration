@@ -63,6 +63,19 @@ router.get('/session/', async function (req: express.Request, res: express.Respo
     res.status(200).json(manager.getSessions());
 });
 
+router.post('/suggestion/',  function (req: express.Request, res: express.Response, next: NextFunction) {
+    const reqBody: IChatRequest = req.body;
+    //#region 쿼리 유효성 체크
+    if (!reqBody.query) {
+        next(new createHttpError[400]('No Query for suggestion'));
+        return;
+    }
+    console.log('Query for suggestion accepted');
+    console.log(reqBody.query); //원래는 데이터베이스에 저장되어야 하나 일단 지금은 로그에만 남기는 걸로 대체
+
+    res.status(200).end();
+});
+
 export default router;
 
 // 대화 로그는 Google Stack Driver 연동하면 할 수 있는 것으로 보임

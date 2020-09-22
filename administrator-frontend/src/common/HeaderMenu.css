@@ -1,0 +1,54 @@
+.header-menu {
+    --top-theme-color: #373737;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+    width: 100%;
+    height: 10vh;
+
+    display: flex;
+    background-color: var(--top-theme-color);
+
+    font-size: 2rem;
+    color: aliceblue;
+}
+
+.header-menu .header-menu-side-button {
+    width: 10vh;
+    height: 10vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-menu-side-button-circle {
+    width: 5vmin;
+    height: 5vmin;
+    border-radius: 2.5vmin;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-menu-side-button-circle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header-menu .header-menu-title {
+    flex-grow: 1;
+
+    display: flex;
+    align-items: center;
+}
+
+.header-menu .header-menu-login {
+    width: 10vh;
+    height: 10vh;
+
+    background-color: chocolate;
+}
