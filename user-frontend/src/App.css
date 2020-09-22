@@ -1,7 +1,3 @@
-.App {
-  text-align: center;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -28,11 +24,48 @@
   color: #61dafb;
 }
 
-#chatbot-container {
+.app-title {
+  width: 100%;
+  height: 12vh;
+  padding: 0 3vw;
+
+  background-color: lightslategray;
+
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+
+  color: whitesmoke;
+  font-weight: bold;
+}
+
+.app-content {
+  display: flex;
+}
+
+.main-content {
+  width: 50%;
+  height: 88vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.site-introduction {
+  width: 40%;
+  padding: 5vh 5%;
+}
+
+.chatbot-container {
   position: relative;
 
-  width: 100vw;
-  height: 100vh;
+  width: 480px;
+  height: 640px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @keyframes App-logo-spin {

@@ -20,8 +20,9 @@ app.use(bodyParser.json());
 //Router 정의
 setRouters(app);
 
-//Error 처리
+//404 Error 처리
 app.use(function(req, res, next) {
+    console.log(req.headers);
     next(createError(404, 'No resources'));
 });
 
