@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./build/",
-    "build": "npx tsc; cp -recurse -force ./src/public ./build/"
+    "build": "tsc && copy /y \"src/public\" \"build/\""
   },
   "author": "ysb",
   "license": "MIT",

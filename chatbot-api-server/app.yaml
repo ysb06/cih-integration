@@ -1,0 +1,6 @@
+runtime: nodejs12
+service: default
+
+network:
+  forwarded_ports:
+    - 3001

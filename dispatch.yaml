@@ -1,0 +1,12 @@
+dispatch:
+  # Default service serves simple hostname request.
+  - url: "csproject-1b085.uc.r.appspot.com/"
+    service: default
+
+  # Send all mobile traffic to the mobile frontend.
+  - url: "*/administrator-frontend/*"
+    service: administrator-frontend
+
+  # Send all work to the one static backend.
+  - url: "*/user-frontend/*"
+    service: user-frontend

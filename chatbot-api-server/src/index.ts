@@ -33,6 +33,6 @@ app.use(function (err: createError.HttpError, req: express.Request, res: express
     res.status(404).render('error', { code: err.statusCode, message: err.message });
 });
 
-app.listen(3001, () => {
-    console.log('Server runs at port 3001');
+app.listen(8080, () => {
+    console.log('Server runs at port 8080');
 });

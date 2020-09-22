@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from './SendButton';
 import './Chatbot.css';
 
-const SERVER_CHATBOT_URL = '//localhost:3001/chat';
+const SERVER_CHATBOT_URL = 'https://csproject-1b085.uc.r.appspot.com/chat';
 const DEFAULT_LANGUAGE_CODE = 'ko-KR';
 
 
